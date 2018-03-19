@@ -1,0 +1,35 @@
+AllCops:
+  Include:
+    - '**/Rakefile'
+    - '**/Gemfile'
+  Exclude:
+    - 'vendor/bundle/**/*'
+  UseCache: true
+  TargetRubyVersion: 2.5
+
+StringLiterals:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/MethodLength:
+  Max: 30
+
+Style/Documentation:
+  Enabled: false
+
+Style/GuardClause:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Metrics/AbcSize:
+  Enabled: false
+
+Style/TrailingCommaInArrayLiteral:
+  EnforcedStyleForMultiline: comma
+
+Style/TrailingCommaInHashLiteral:
+  EnforcedStyleForMultiline: comma
