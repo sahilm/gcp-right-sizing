@@ -73,37 +73,50 @@ task :initialize_bigquery_dataset, [:project_id] do |_, args|
     t.name = 'VM Info'
     t.description = 'Information about VMs that can be right sized to save cost and increase performance.'
     t.schema do |s|
-      s.record 'project', mode: :required do |ns|
-        ns.string 'name', mode: :required
-        ns.string 'id', mode: :required
+      s.record 'project', mode: :required do |project|
+        project.string 'name', mode: :required
+        project.string 'id', mode: :required
       end
-      s.record 'vm', mode: :required do |ns|
-        ns.string 'name', mode: :required
-        ns.string 'zone', mode: :required
-        ns.record 'bosh', mode: :required do |bs|
-          bs.string 'name'
-          bs.string 'job'
-          bs.string 'deployment'
-          bs.string 'instance_group'
+      s.record 'vm', mode: :required do |vm|
+        vm.string 'name', mode: :required
+        vm.string 'zone', mode: :required
+        vm.record 'bosh', mode: :required do |bosh|
+          bosh.string 'name'
+          bosh.string 'job'
+          bosh.string 'deployment'
+          bosh.string 'instance_group'
         end
-      end
-      s.integer 'estimated_cost_difference_per_month_in_cents_of_usd', mode: :required
-      s.record 'current_machine_type', mode: :required do |ns|
-        ns.integer 'cpu_milli_vcores', mode: :required
-        ns.integer 'memory_bytes', mode: :required
-        ns.string 'name', mode: :required
-        ns.integer 'reserved_cpu_milli_cores', mode: :required
-      end
-      s.record 'recommended_machine_type', mode: :required do |ns|
-        ns.integer 'cpu_milli_vcores', mode: :required
-        ns.integer 'memory_bytes', mode: :required
-        ns.string 'name', mode: :required
-        ns.integer 'reserved_cpu_milli_cores', mode: :required
-      end
-      s.record 'prediction', mode: :required do |ns|
-        ns.integer 'cpu_milli_vcores', mode: :required
-        ns.integer 'memory_bytes', mode: :required
+        vm.integer 'estimated_cost_difference_per_month_in_cents_of_usd', mode: :required
+        vm.record 'current_machine_type', mode: :required do |current_machine_type|
+          current_machine_type.integer 'cpu_milli_vcores', mode: :required
+          current_machine_type.integer 'memory_bytes', mode: :required
+          current_machine_type.string 'name', mode: :required
+          current_machine_type.integer 'reserved_cpu_milli_cores', mode: :required
+        end
+        vm.record 'recommended_machine_type', mode: :required do |recommended_machine_type|
+          recommended_machine_type.integer 'cpu_milli_vcores', mode: :required
+          recommended_machine_type.integer 'memory_bytes', mode: :required
+          recommended_machine_type.string 'name', mode: :required
+          recommended_machine_type.integer 'reserved_cpu_milli_cores', mode: :required
+        end
+        vm.record 'prediction', mode: :required do |prediction|
+          prediction.integer 'cpu_milli_vcores', mode: :required
+          prediction.integer 'memory_bytes', mode: :required
+        end
       end
     end
   end
+end
+
+desc 'Load data into BigQuery'
+task :load_data_into_biquery, [:project_id, :data_file] do |_, args|
+  creds = Google::Auth.get_application_default(['https://www.googleapis.com/auth/cloud-platform'])
+  bigquery = Google::Cloud::Bigquery.new(project_id: args.project_id,
+                                         credentials: creds)
+
+  dataset = bigquery.dataset 'right_sizing'
+  table = dataset.table 'vm_info'
+
+  file = File.open(args.data_file)
+  table.load(file, format: 'json', write: 'truncate')
 end
