@@ -4,6 +4,7 @@ require 'oj'
 Oj.mimic_JSON
 require 'logger'
 require 'ruby-progressbar'
+require 'google/cloud/bigquery'
 
 require_relative 'lib/recommendations'
 require_relative 'lib/project'
@@ -56,6 +57,53 @@ task :generate_right_sizing_data, [:output_file_path, :error_file_path] do |_, a
       end
     ensure
       progress_bar.increment
+    end
+  end
+end
+
+desc 'Initializes BigQuery dataset to load right sizing data'
+task :initialize_bigquery_dataset, [:project_id] do |_, args|
+  creds = Google::Auth.get_application_default(['https://www.googleapis.com/auth/cloud-platform'])
+  bigquery = Google::Cloud::Bigquery.new(project_id: args.project_id,
+                                         credentials: creds)
+
+  dataset = bigquery.create_dataset 'right_sizing'
+
+  dataset.create_table 'vm_info' do |t|
+    t.name = 'VM Info'
+    t.description = 'Information about VMs that can be right sized to save cost and increase performance.'
+    t.schema do |s|
+      s.record 'project', mode: :required do |ns|
+        ns.string 'name', mode: :required
+        ns.string 'id', mode: :required
+      end
+      s.record 'vm', mode: :required do |ns|
+        ns.string 'name', mode: :required
+        ns.string 'zone', mode: :required
+        ns.record 'bosh', mode: :required do |bs|
+          bs.string 'name'
+          bs.string 'job'
+          bs.string 'deployment'
+          bs.string 'instance_group'
+        end
+      end
+      s.integer 'estimated_cost_difference_per_month_in_cents_of_usd', mode: :required
+      s.record 'current_machine_type', mode: :required do |ns|
+        ns.integer 'cpu_milli_vcores', mode: :required
+        ns.integer 'memory_bytes', mode: :required
+        ns.string 'name', mode: :required
+        ns.integer 'reserved_cpu_milli_cores', mode: :required
+      end
+      s.record 'recommended_machine_type', mode: :required do |ns|
+        ns.integer 'cpu_milli_vcores', mode: :required
+        ns.integer 'memory_bytes', mode: :required
+        ns.string 'name', mode: :required
+        ns.integer 'reserved_cpu_milli_cores', mode: :required
+      end
+      s.record 'prediction', mode: :required do |ns|
+        ns.integer 'cpu_milli_vcores', mode: :required
+        ns.integer 'memory_bytes', mode: :required
+      end
     end
   end
 end

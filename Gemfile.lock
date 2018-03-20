@@ -3,6 +3,7 @@ GEM
   specs:
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
+    concurrent-ruby (1.0.5)
     declarative (0.0.10)
     declarative-option (0.1.0)
     ethon (0.11.0)
@@ -19,6 +20,15 @@ GEM
       mime-types (~> 3.0)
       representable (~> 3.0)
       retriable (>= 2.0, < 4.0)
+    google-cloud-bigquery (1.1.0)
+      concurrent-ruby (~> 1.0)
+      google-api-client (~> 0.19.8)
+      google-cloud-core (~> 1.2)
+      googleauth (~> 0.6.2)
+    google-cloud-core (1.2.0)
+      google-cloud-env (~> 1.0)
+    google-cloud-env (1.0.1)
+      faraday (~> 0.11)
     googleauth (0.6.2)
       faraday (~> 0.12)
       jwt (>= 1.4, < 3.0)
@@ -65,6 +75,7 @@ DEPENDENCIES
   faraday
   faraday_middleware
   google-api-client
+  google-cloud-bigquery
   googleauth
   oj
   rake
