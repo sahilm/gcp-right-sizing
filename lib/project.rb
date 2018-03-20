@@ -14,4 +14,8 @@ class Project
       @service.list_projects(page_token: token)
     end.to_a
   end
+
+  def fetch(project_id)
+    @service.get_project(project_id)
+  end
 end

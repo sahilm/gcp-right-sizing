@@ -9,13 +9,16 @@ class VM
     @service.authorization = Google::Auth.get_application_default(['https://www.googleapis.com/auth/cloud-platform'])
   end
 
-  def fetch(instances)
-    response = []
+  def fetch(instances, key_to_mapify_on)
+    response = {}
     @service.batch do |service|
       instances.each do |i|
         service.get_instance(i[:project], i[:zone], i[:name], fields: i[:fields]) do |res, err|
-          raise err if err
-          response << res
+          if err
+            STDERR.puts(err)
+          else
+            response[res.to_h[key_to_mapify_on]] = res
+          end
         end
       end
     end

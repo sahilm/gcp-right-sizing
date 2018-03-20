@@ -20,6 +20,14 @@ class Recommendations
   end
 
   def for(project_id)
-    @conn.get '', cmd: 'LIST', pid: project_id
+    resp = @conn.get '', cmd: 'LIST', pid: project_id
+    resp.body[:items]
+  rescue Faraday::ClientError => f
+    if f.response[:status] == 403
+      STDERR.puts("got 403 for #{project_id}. Moving on...")
+      []
+    else
+      raise f
+    end
   end
 end
