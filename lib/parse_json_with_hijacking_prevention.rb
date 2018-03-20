@@ -19,7 +19,8 @@ class ParseJsonWithHijackingPrevention
   end
 
   def json_response?(env)
-    env[:response_headers].key?('Content-Type') && env[:response_headers]['Content-Type'].start_with?('application/json')
+    env[:response_headers].key?('Content-Type') &&
+      env[:response_headers]['Content-Type'].start_with?('application/json')
   end
 end
 

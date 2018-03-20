@@ -4,6 +4,7 @@ AllCops:
     - '**/Gemfile'
   Exclude:
     - 'vendor/bundle/**/*'
+    - 'bin/**'
   UseCache: true
   TargetRubyVersion: 2.5
 
