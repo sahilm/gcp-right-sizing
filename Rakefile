@@ -13,8 +13,7 @@ desc 'Generate right sizing data in JSON'
 task :generate_right_sizing_data, [:output_file_path, :error_file_path] do |_, args|
   args.with_defaults(output_file_path: 'data/right_sizing_data.jsonlines', error_file_path: 'data/errors')
 
-  mkdir_p(File.dirname(args.output_file_path))
-  mkdir_p(File.dirname(args.error_file_path))
+  FileUtils.mkdir_p([File.dirname(args.output_file_path), File.dirname(args.error_file_path)])
 
   puts "results -> #{args.output_file_path}"
   puts "errors -> #{args.error_file_path}"
