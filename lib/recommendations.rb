@@ -5,7 +5,7 @@ require 'faraday_middleware'
 require_relative 'parse_json_with_hijacking_prevention'
 
 class Recommendations
-  def initialize(cookie)
+  def initialize(cookie, logger)
     @conn = Faraday.new(url: 'https://console.cloud.google.com/m/gce/recommendations',
                         headers: {
                           accept: 'application/json',
@@ -17,6 +17,7 @@ class Recommendations
       faraday.use Faraday::Response::RaiseError
       faraday.adapter :typhoeus
     end
+    @logger = logger
   end
 
   def for(project_id)
@@ -24,7 +25,7 @@ class Recommendations
     resp.body[:items]
   rescue Faraday::ClientError => f
     if f.response[:status] == 403
-      STDERR.puts("got 403 for #{project_id}. Moving on...")
+      @logger.warn("got 403 for #{project_id}. Moving on...")
       []
     else
       raise f
