@@ -12,7 +12,7 @@ class Project
   def fetch_all
     @service.fetch_all(items: :projects) do |token|
       @service.list_projects(page_token: token)
-    end.to_a
+    end
   end
 
   def fetch(project_id)

@@ -3,6 +3,7 @@
 require 'oj'
 Oj.mimic_JSON
 require 'logger'
+require 'ruby-progressbar'
 
 require_relative 'lib/recommendations'
 require_relative 'lib/project'
@@ -27,7 +28,13 @@ task :generate_right_sizing_data, [:output_file_path, :error_file_path] do |_, a
   File.open(args.output_file_path, 'w') do |file|
     recommendations = Recommendations.new(ENV['GCP_COOKIE'], err_logger)
     vm = VM.new(err_logger)
-    Project.new.fetch_all.each do |project|
+    projects = Project.new.fetch_all
+
+    progress_bar = ProgressBar.create(format: '%a |%b>>%i| %p%% %t',
+                                      starting_at: 0,
+                                      total: projects.count)
+
+    projects.each do |project|
       reco = recommendations.for(project.project_id)
       next if reco.empty?
       instances_to_fetch = reco.map do |r|
@@ -47,6 +54,8 @@ task :generate_right_sizing_data, [:output_file_path, :error_file_path] do |_, a
           err_logger.error("could not find instance #{r[:name]}")
         end
       end
+    ensure
+      progress_bar.increment
     end
   end
 end
