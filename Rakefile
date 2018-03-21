@@ -86,23 +86,23 @@ task :initialize_bigquery_dataset, [:project_id] do |_, args|
           bosh.string 'deployment'
           bosh.string 'instance_group'
         end
-        vm.integer 'estimated_cost_difference_per_month_in_cents_of_usd', mode: :required
-        vm.record 'current_machine_type', mode: :required do |current_machine_type|
-          current_machine_type.integer 'cpu_milli_vcores', mode: :required
-          current_machine_type.integer 'memory_bytes', mode: :required
-          current_machine_type.string 'name', mode: :required
-          current_machine_type.integer 'reserved_cpu_milli_cores', mode: :required
-        end
-        vm.record 'recommended_machine_type', mode: :required do |recommended_machine_type|
-          recommended_machine_type.integer 'cpu_milli_vcores', mode: :required
-          recommended_machine_type.integer 'memory_bytes', mode: :required
-          recommended_machine_type.string 'name', mode: :required
-          recommended_machine_type.integer 'reserved_cpu_milli_cores', mode: :required
-        end
-        vm.record 'prediction', mode: :required do |prediction|
-          prediction.integer 'cpu_milli_vcores', mode: :required
-          prediction.integer 'memory_bytes', mode: :required
-        end
+      end
+      s.integer 'estimated_cost_difference_per_month_in_cents_of_usd', mode: :required
+      s.record 'current_machine_type', mode: :required do |current_machine_type|
+        current_machine_type.integer 'cpu_milli_vcores', mode: :required
+        current_machine_type.integer 'memory_bytes', mode: :required
+        current_machine_type.string 'name', mode: :required
+        current_machine_type.integer 'reserved_cpu_milli_cores', mode: :required
+      end
+      s.record 'recommended_machine_type', mode: :required do |recommended_machine_type|
+        recommended_machine_type.integer 'cpu_milli_vcores', mode: :required
+        recommended_machine_type.integer 'memory_bytes', mode: :required
+        recommended_machine_type.string 'name', mode: :required
+        recommended_machine_type.integer 'reserved_cpu_milli_cores', mode: :required
+      end
+      s.record 'prediction', mode: :required do |prediction|
+        prediction.integer 'cpu_milli_vcores', mode: :required
+        prediction.integer 'memory_bytes', mode: :required
       end
     end
   end

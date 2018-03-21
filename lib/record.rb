@@ -27,24 +27,24 @@ class Record
           "deployment": labels["deployment"],
           "instance_group": labels["instance_group"],
         },
-        "estimated_cost_difference_per_month_in_cents_of_usd":
-          to_cents(target_info[:estimatedCostDifferencePerMonthUsd]),
-        "current_machine_type": {
-          "cpu_milli_vcores": current_machine_type[:cpuMilliVcores],
-          "memory_bytes": current_machine_type[:memoryBytes],
-          "name": current_machine_type[:name],
-          "reserved_cpu_milli_cores": current_machine_type[:reservedCpuMilliVcores],
-        },
-        "recommended_machine_type": {
-          "cpu_milli_vcores": reco_machine_type[:cpuMilliVcores],
-          "memory_bytes": reco_machine_type[:memoryBytes],
-          "name": reco_machine_type[:name],
-          "reserved_cpu_milli_cores": reco_machine_type[:reservedCpuMilliVcores],
-        },
-        "prediction": {
-          "cpu_milli_vcores": reco_data[:predictedCpuMilliVcores],
-          "memory_bytes": reco_data[:predictedMemoryBytes],
-        },
+      },
+      "estimated_cost_difference_per_month_in_cents_of_usd":
+        to_cents(target_info[:estimatedCostDifferencePerMonthUsd]),
+      "current_machine_type": {
+        "cpu_milli_vcores": current_machine_type[:cpuMilliVcores],
+        "memory_bytes": current_machine_type[:memoryBytes],
+        "name": current_machine_type[:name],
+        "reserved_cpu_milli_cores": current_machine_type[:reservedCpuMilliVcores],
+      },
+      "recommended_machine_type": {
+        "cpu_milli_vcores": reco_machine_type[:cpuMilliVcores],
+        "memory_bytes": reco_machine_type[:memoryBytes],
+        "name": reco_machine_type[:name],
+        "reserved_cpu_milli_cores": reco_machine_type[:reservedCpuMilliVcores],
+      },
+      "prediction": {
+        "cpu_milli_vcores": reco_data[:predictedCpuMilliVcores],
+        "memory_bytes": reco_data[:predictedMemoryBytes],
       },
     }
   end
